@@ -1,4 +1,4 @@
-const userService = require('./../services/index');
+const {userService} = require('./../services');
 const { StatusCodes } = require('http-status-codes');
 const {SuccessResponse,ErrorResponse} = require('./../utils/common');
 
