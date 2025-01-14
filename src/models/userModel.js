@@ -16,7 +16,7 @@ const userSchema = new  mongoose.Schema({
     age :{
         type : Number,
         required: true,
-        min : 14
+        min : [14, "Age must be greater than 13"]
     }
 }, {timestamps : true});
 const userModel = mongoose.model('user', userSchema);
