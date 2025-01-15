@@ -19,4 +19,19 @@ async function createUser(data) {
     }
 }
 
-module.exports = {createUser};
+async function userLogin(data){
+    try{
+        const username = await UserRepo.find(data.username);
+        if(!username){
+            logger.error(`No such ${data.username} username....`,'root',{});
+            return `No such ${data.username} username`;
+        }
+        return "Username validated!!";
+    }
+    catch(err){
+        throw new Error(err);
+    }
+    
+}
+
+module.exports = {createUser, userLogin};

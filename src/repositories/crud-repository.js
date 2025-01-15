@@ -1,4 +1,5 @@
 const {SuccessResponse, ErrorResponse} = require('./../utils/common');
+const { server, logger }  = require('./../config');
 const {StatusCodes} = require('http-status-codes');
 
 class CrudRepositroy{
@@ -9,6 +10,17 @@ class CrudRepositroy{
     async  create(data){
         const result = await this.model.create(data);
         return result;  
+    }
+
+    async find(data){
+        console.log(data);
+        const result = await this.model.findOne({'username' : data});
+        if (!result){
+            logger.error(`Error in find crud :${result}`,'root',{});
+            throw new Error(result,StatusCodes.NOT_FOUND);
+        }
+        console.log(result);
+        return result;
     }
 }
 

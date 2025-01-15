@@ -26,4 +26,22 @@ async function createUser(req,res){
     }
 }
 
-module.exports = {createUser};
+async function userLogin(req, res){
+    try{
+        const result = await userService.userLogin(req.body);
+        SuccessResponse.message = result;
+        return res
+                .status(StatusCodes.OK)
+                .json(SuccessResponse);
+    }
+    catch(err){
+        ErrorResponse.error = err.message;
+        return res
+                .status(StatusCodes.NOT_FOUND)
+                .json(ErrorResponse);
+    }
+        
+}
+
+
+module.exports = {createUser, userLogin};
