@@ -13,4 +13,4 @@ app.listen(server.PORT , () =>{
     logger.info('Connection established....','root',{});
 })
 
-logger.info(db.connectdb(),'root',{});
+db.connectdb();
