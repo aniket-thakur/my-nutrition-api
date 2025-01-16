@@ -1,5 +1,6 @@
 const{StatusCodes} = require('http-status-codes');
 const {UserRepository} = require('./../repositories');
+const AppError = require('./../utils/errors/app-error');
 const bcrypt = require('bcrypt');
 const UserRepo = new UserRepository();
 const saltRounds = 10;
@@ -14,29 +15,37 @@ async function createUser(data) {
 
     }
     catch(err){
+        if(err.name == 'ValidationError'){ 
+            const message = Object.values(err.errors).map(e => e.message);
+            throw new AppError(message[0],StatusCodes.INTERNAL_SERVER_ERROR);
+        }
         // throw new Error("Error creating new User");
-        throw new Error(err);
+        throw new AppError(err,StatusCodes.INTERNAL_SERVER_ERROR);
     }
 }
 
 async function userLogin(data){
     try{
-        const user = await UserRepo.find(data.username);
-        if(!user){
-            const userPassword = data.password;
-            const passwordHash = user.password;
-            const match = await bcrypt.compare(userPassword, passwordHash);
-            if(match){
-                return "Username validated!!";
-            }
+        const user = await UserRepo.find(data.username).catch(err=>{
+                if(err instanceof AppError){
+                    throw new AppError("Username not found.",StatusCodes.NOT_FOUND);
+                }
+            });
+
+        const userPassword = data.password;
+        const passwordHash = user.password;
+        const match = await bcrypt.compare(userPassword, passwordHash);
+        if(!match){
+            throw new AppError("Wrong Password", StatusCodes.UNAUTHORIZED);
         }
-        return "Username or password Incorrect";
+        return "Username validated!!";
     }
     catch(err){
-        console.log(err.message);
-        throw new Error(err);
-    }
-    
+        if(err instanceof AppError){
+            throw err;
+        }
+            throw new AppError("Unexpected Error Occured", StatusCodes.INTERNAL_SERVER_ERROR);
+    }  
 }
 
 module.exports = {createUser, userLogin};

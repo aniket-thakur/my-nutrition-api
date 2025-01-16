@@ -1,4 +1,4 @@
-
+const AppError = require('./../utils/errors/app-error');
 const { server, logger }  = require('./../config');
 const {StatusCodes} = require('http-status-codes');
 
@@ -17,7 +17,7 @@ class CrudRepositroy{
         const result = await this.model.findOne({'username' : data});
         if (!result){
             logger.error(`Error in find crud :${result}`,'root',{});
-            throw new Error("No username found.",StatusCodes.NOT_FOUND);
+            throw new AppError("",StatusCodes.NOT_FOUND);
         }
         console.log(result);
         return result;
