@@ -21,14 +21,19 @@ async function createUser(data) {
 
 async function userLogin(data){
     try{
-        const username = await UserRepo.find(data.username);
-        if(!username){
-            logger.error(`No such ${data.username} username....`,'root',{});
-            return `No such ${data.username} username`;
+        const user = await UserRepo.find(data.username);
+        if(!user){
+            const userPassword = data.password;
+            const passwordHash = user.password;
+            const match = await bcrypt.compare(userPassword, passwordHash);
+            if(match){
+                return "Username validated!!";
+            }
         }
-        return "Username validated!!";
+        return "Username or password Incorrect";
     }
     catch(err){
+        console.log(err.message);
         throw new Error(err);
     }
     

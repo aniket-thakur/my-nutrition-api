@@ -15,9 +15,6 @@ async function createUser(req,res){
         // return res.json(newUser);
     }
     catch(err){
-
-        console.log("Errror : ",err.message);
-        console.log(err);
         ErrorResponse.error = err.message;
         return res
                 .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -35,6 +32,7 @@ async function userLogin(req, res){
                 .json(SuccessResponse);
     }
     catch(err){
+        console.log(err);
         ErrorResponse.error = err.message;
         return res
                 .status(StatusCodes.NOT_FOUND)
