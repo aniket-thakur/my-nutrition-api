@@ -26,13 +26,19 @@ async function createUser(req,res){
 async function userLogin(req, res){
     try{
         const result = await userService.userLogin(req.body);
-        SuccessResponse.message = result;
+        // SuccessResponse.message = result;
+        const custResponse= {
+            ...SuccessResponse,
+            message : result.msg,
+            token : result.token,
+            data : null
+        }
         return res
                 .status(StatusCodes.OK)
-                .json(SuccessResponse);
+                .json(custResponse);
     }
     catch(err){
-        console.log(err);
+        console.log(err.message);
         ErrorResponse.error = err.message;
         return res
                 .status(StatusCodes.NOT_FOUND)

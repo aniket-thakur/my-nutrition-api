@@ -2,6 +2,9 @@ const{StatusCodes} = require('http-status-codes');
 const {UserRepository} = require('./../repositories');
 const AppError = require('./../utils/errors/app-error');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+
 const UserRepo = new UserRepository();
 const saltRounds = 10;
 async function createUser(data) {
@@ -38,7 +41,9 @@ async function userLogin(data){
         if(!match){
             throw new AppError("Wrong Password", StatusCodes.UNAUTHORIZED);
         }
-        return "Username validated!!";
+        const token =jwt.sign({email : user.email},"myprivatekey")
+        // console.log(test);
+        return {msg :"Username validated!!", token:token};
     }
     catch(err){
         if(err instanceof AppError){

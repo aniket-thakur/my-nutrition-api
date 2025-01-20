@@ -13,13 +13,12 @@ class CrudRepositroy{
     }
 
     async find(data){
-        console.log(data);
+        // console.log(data);
         const result = await this.model.findOne({'username' : data});
         if (!result){
             logger.error(`Error in find crud :${result}`,'root',{});
             throw new AppError("",StatusCodes.NOT_FOUND);
         }
-        console.log(result);
         return result;
     }
 }
